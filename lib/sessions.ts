@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { getSupabase } from "./supabase";
 import type { Category } from "./content";
 
 // ─────────────────────────────────────────────
@@ -35,7 +35,7 @@ export interface SessionRecord {
 
 export async function recordSession(session: SessionRecord): Promise<void> {
   try {
-    const { error } = await supabase.from("sessions").insert([session]);
+    const { error } = await getSupabase().from("sessions").insert([session]);
     if (error) console.error("Session record failed:", error.message);
   } catch (e) {
     // Fail silently — the app works without persistence
@@ -59,7 +59,7 @@ export async function getCategoryCounts(
   const defaults: CategoryCounts = { avoiding: 0, overthinking: 0, nothing: 0 };
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("sessions")
       .select("category")
       .eq("user_id", userId);
@@ -80,7 +80,7 @@ export async function getCategoryCounts(
 
 export async function getTotalSessions(userId: string): Promise<number> {
   try {
-    const { count, error } = await supabase
+    const { count, error } = await getSupabase()
       .from("sessions")
       .select("*", { count: "exact", head: true })
       .eq("user_id", userId);
