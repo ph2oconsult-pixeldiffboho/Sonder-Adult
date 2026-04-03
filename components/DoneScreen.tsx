@@ -4,21 +4,21 @@ import { FadeIn } from "./FadeIn";
 import styles from "./screens.module.css";
 
 interface DoneScreenProps {
-  onReset: () => void;
+  isLastDay: boolean;
 }
 
-export function DoneScreen({ onReset }: DoneScreenProps) {
+export function DoneScreen({ isLastDay }: DoneScreenProps) {
   return (
     <div className={styles.screenWrap}>
       <FadeIn delay={0.3}>
         <div className={styles.doneDot} />
       </FadeIn>
 
-      <FadeIn delay={2.0}>
-        <button className={styles.againBtn} onClick={onReset}>
-          again
-        </button>
-      </FadeIn>
+      {isLastDay && (
+        <FadeIn delay={1.5}>
+          <p className={styles.sequenceEnd}>Something new begins tomorrow.</p>
+        </FadeIn>
+      )}
     </div>
   );
 }

@@ -2,56 +2,79 @@
 
 A minimal awareness system. Not self-help. Not journaling. Not meditation.
 
-One interaction. Under 30 seconds. Interrupts autopilot.
+One interaction per day. Under 30 seconds. Something unfolds over seven days.
 
 ---
 
-## What it does
+## How it works
 
-Four steps:
+You open the app. You see one line. You tap through four screens. You leave.
 
-1. **Now** — "What's pulling your attention?" → pick one of three
-2. **Reflection** — One sharp line reflected back
-3. **Micro-action** — One instruction, under 10 seconds
-4. **Close** — Done
-
-That's it.
+The next day, the line connects to the one before it. By day seven, something has shifted — not because you were taught anything, but because you kept noticing.
 
 ---
 
 ## Architecture
 
+### Narrative Engine
+
+The app runs on **sequenced 7-day arcs**, not random content pools.
+
+Each sequence follows an invisible progression:
+- Days 1–2: Awareness (something surfaces)
+- Days 3–5: Pattern recognition (it's not random)
+- Days 6–7: Perceptual shift (something changes)
+
+The user never sees this structure. They just feel it.
+
+### 10 Sequences (70 days of content)
+
+| # | Pattern | Internal Reference |
+|---|---------|-------------------|
+| 1 | Avoidance | The thing you won't look at |
+| 2 | Overthinking | The loop that feels like progress |
+| 3 | Seeking Approval | The audience that isn't there |
+| 4 | Control | The grip that won't open |
+| 5 | Comparison | The mirror that isn't yours |
+| 6 | Emotional Reaction | The speed before the thought |
+| 7 | Distraction | The exit you don't remember taking |
+| 8 | Unfinished Decisions | The thing you keep almost doing |
+| 9 | Internal Conflict | The argument you're having with yourself |
+| 10 | Uncertainty | The ground that isn't there |
+
+### Day Tracking
+
+- Anonymous user ID (crypto UUID, localStorage)
+- Supabase `user_state` table tracks current sequence + day
+- One session per day (returning same day shows "Come back tomorrow")
+- On day 7 completion, auto-assigns next sequence
+- After all 10, cycles back
+
+### File Structure
+
 ```
 app/
-  layout.tsx          Root layout, meta, global CSS
-  page.tsx            Mounts NowContainer
+  layout.tsx              Root layout
+  page.tsx                Mounts NowContainer (force-dynamic)
 
 components/
-  NowContainer.tsx    State machine (5 steps), session tracking
-  EntryScreen.tsx     "Now" prompt + 3 tap options
-  ResponseScreen.tsx  Single reflection line
-  ActionScreen.tsx    Single micro-action
-  CloseScreen.tsx     Clean exit
-  DoneScreen.tsx      Dot + "again"
-  FadeIn.tsx          Framer Motion fade wrapper
-  *.module.css        Co-located styles
+  NowContainer.tsx        State machine + session orchestration
+  EntryScreen.tsx         Day label + entry line
+  ResponseScreen.tsx      Reflection line
+  ActionScreen.tsx        Micro-action
+  CloseScreen.tsx         Close line
+  DoneScreen.tsx          Completion (mid-sequence or end-of-sequence)
+  AlreadyDoneScreen.tsx   "Come back tomorrow"
+  FadeIn.tsx              Framer Motion wrapper
 
 lib/
-  content.ts          All prompts, responses, actions, closings (tier 1 + tier 2)
-  sessions.ts         Anonymous user ID, Supabase session recording, pattern retrieval
-  supabase.ts         Supabase client singleton
+  content.ts              10 sequences × 7 days (all content)
+  sessions.ts             User state, day tracking, progression logic
+  supabase.ts             Lazy-init Supabase client
 
 supabase/
-  schema.sql          Run in Supabase SQL Editor to create tables
+  schema.sql              user_state + sessions tables, RLS, analytics view
 ```
-
-### Pattern Recognition
-
-Content has two tiers:
-- **Tier 1** (sessions 1–5 per category): gentler reflections
-- **Tier 2** (session 6+ per category): sharper, more confronting
-
-The system silently escalates when it detects repeated patterns. No UI indication. The language just gets more precise.
 
 ---
 
@@ -67,14 +90,14 @@ npm install
 
 ### 2. Supabase
 
-1. Create a new Supabase project at [supabase.com](https://supabase.com)
-2. Go to **SQL Editor** and run the contents of `supabase/schema.sql`
-3. Go to **Settings → API** and copy your project URL and anon key
+1. Create a Supabase project
+2. Run `supabase/schema.sql` in the SQL Editor
+3. Copy Project URL + anon key from Settings → API
 4. Create `.env.local`:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### 3. Run locally
@@ -83,44 +106,25 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
-
-### 4. Deploy to Vercel
+### 4. Deploy
 
 ```bash
 npx vercel
 ```
 
-Add the two environment variables in Vercel dashboard → Settings → Environment Variables.
+Add env vars in Vercel → Settings → Environment Variables.
 
 ---
 
 ## Design Principles
 
-- No long text
-- No journaling
-- No progress tracking
-- No gamification
-- No "journey" language
-- No "self-improvement" tone
-- Calm, not motivational
-- Precise, not abstract
-- Intelligent, not clinical
-- Never sounds like a coach, therapist, or guru
-
----
-
-## Content Stats
-
-| Category     | Tier 1 Responses | Tier 2 Responses | Tier 1 Actions | Tier 2 Actions |
-|-------------|-----------------|-----------------|----------------|----------------|
-| Avoiding    | 8               | 8               | 5              | 5              |
-| Overthinking| 8               | 8               | 5              | 5              |
-| Nothing     | 8               | 8               | 5              | 5              |
-
-Plus 5 entry prompts and 10 closing messages.
-
-**Total unique combinations**: 5 × 3 × 16 × 10 × 10 = **24,000**
+- One interaction per day
+- Under 30 seconds
+- No journaling, no gamification, no progress bars
+- No teaching, explaining, or advising
+- Content is sequenced, not random
+- Language sharpens across the week
+- Day 7 is earned, not motivational
 
 ---
 

@@ -7,16 +7,12 @@ import { ResponseScreen } from "./ResponseScreen";
 import { ActionScreen } from "./ActionScreen";
 import { CloseScreen } from "./CloseScreen";
 import { DoneScreen } from "./DoneScreen";
-import {
-  selectContent,
-  selectEntryPrompt,
-  type Category,
-} from "@/lib/content";
+import { AlreadyDoneScreen } from "./AlreadyDoneScreen";
 import {
   getOrCreateUserId,
-  getCategoryCounts,
-  recordSession,
-  type CategoryCounts,
+  getTodaySession,
+  completeSession,
+  type TodaySession,
 } from "@/lib/sessions";
 import styles from "./NowContainer.module.css";
 
@@ -25,15 +21,17 @@ import styles from "./NowContainer.module.css";
 // ─────────────────────────────────────────────
 
 enum Step {
+  LOADING = -1,
   ENTRY = 0,
   RESPONSE = 1,
   ACTION = 2,
   CLOSE = 3,
   DONE = 4,
+  ALREADY_DONE = 5,
 }
 
 // ─────────────────────────────────────────────
-// PAGE TRANSITION WRAPPER
+// PAGE TRANSITION
 // ─────────────────────────────────────────────
 
 function ScreenTransition({
@@ -64,26 +62,16 @@ function ScreenTransition({
 // ─────────────────────────────────────────────
 
 export function NowContainer() {
-  const [step, setStep] = useState(Step.ENTRY);
-  const [category, setCategory] = useState<Category | null>(null);
-  const [response, setResponse] = useState("");
-  const [action, setAction] = useState("");
-  const [closing, setClosing] = useState("");
-  const [entryPrompt, setEntryPrompt] = useState("");
+  const [step, setStep] = useState(Step.LOADING);
+  const [session, setSession] = useState<TodaySession | null>(null);
   const [timeLabel, setTimeLabel] = useState("");
-  const [categoryCounts, setCategoryCounts] = useState<CategoryCounts>({
-    avoiding: 0,
-    overthinking: 0,
-    nothing: 0,
-  });
 
   const sessionStart = useRef<number>(0);
   const userId = useRef<string>("");
 
-  // Initialize
+  // Initialize: load user state and today's content
   useEffect(() => {
     userId.current = getOrCreateUserId();
-    setEntryPrompt(selectEntryPrompt());
 
     const h = new Date().getHours();
     if (h < 12) setTimeLabel("morning");
@@ -91,59 +79,50 @@ export function NowContainer() {
     else if (h < 21) setTimeLabel("evening");
     else setTimeLabel("night");
 
-    // Load category counts for pattern recognition
     if (userId.current) {
-      getCategoryCounts(userId.current).then(setCategoryCounts);
+      getTodaySession(userId.current).then((todaySession) => {
+        setSession(todaySession);
+        if (todaySession.alreadyCompletedToday) {
+          setStep(Step.ALREADY_DONE);
+        } else {
+          setStep(Step.ENTRY);
+        }
+      });
     }
   }, []);
 
-  const handleSelect = useCallback(
-    (cat: Category) => {
-      sessionStart.current = Date.now();
-      const content = selectContent(cat, categoryCounts);
-      setCategory(cat);
-      setResponse(content.response);
-      setAction(content.action);
-      setClosing(content.closing);
-      setStep(Step.RESPONSE);
-    },
-    [categoryCounts]
-  );
+  const handleBegin = useCallback(() => {
+    sessionStart.current = Date.now();
+    setStep(Step.RESPONSE);
+  }, []);
 
   const advance = useCallback(() => {
     setStep((prev) => {
       const next = prev + 1;
 
       // Record session when reaching DONE
-      if (next === Step.DONE && category) {
+      if (next === Step.DONE && session) {
         const duration = Date.now() - sessionStart.current;
-        recordSession({
-          user_id: userId.current,
-          category,
-          response_shown: response,
-          action_shown: action,
-          closing_shown: closing,
-          duration_ms: duration,
-        });
-        // Update local counts
-        setCategoryCounts((prev) => ({
-          ...prev,
-          [category]: prev[category] + 1,
-        }));
+        completeSession(
+          userId.current,
+          session.sequenceId,
+          session.day,
+          duration
+        );
       }
 
       return next;
     });
-  }, [category, response, action, closing]);
+  }, [session]);
 
-  const reset = useCallback(() => {
-    setStep(Step.ENTRY);
-    setCategory(null);
-    setResponse("");
-    setAction("");
-    setClosing("");
-    setEntryPrompt(selectEntryPrompt());
-  }, []);
+  if (!session || step === Step.LOADING) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.grain} />
+        <div className={styles.content} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -159,18 +138,34 @@ export function NowContainer() {
       <div className={styles.content}>
         <ScreenTransition stepKey={step}>
           {step === Step.ENTRY && (
-            <EntryScreen prompt={entryPrompt} onSelect={handleSelect} />
+            <EntryScreen
+              entryLine={session.content.entry}
+              day={session.day}
+              onBegin={handleBegin}
+            />
           )}
           {step === Step.RESPONSE && (
-            <ResponseScreen text={response} onContinue={advance} />
+            <ResponseScreen
+              text={session.content.response}
+              onContinue={advance}
+            />
           )}
           {step === Step.ACTION && (
-            <ActionScreen text={action} onContinue={advance} />
+            <ActionScreen
+              text={session.content.action}
+              onContinue={advance}
+            />
           )}
           {step === Step.CLOSE && (
-            <CloseScreen text={closing} onContinue={advance} />
+            <CloseScreen
+              text={session.content.close}
+              onContinue={advance}
+            />
           )}
-          {step === Step.DONE && <DoneScreen onReset={reset} />}
+          {step === Step.DONE && (
+            <DoneScreen isLastDay={session.isLastDay} />
+          )}
+          {step === Step.ALREADY_DONE && <AlreadyDoneScreen />}
         </ScreenTransition>
       </div>
 

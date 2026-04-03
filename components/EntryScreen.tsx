@@ -1,56 +1,28 @@
 "use client";
 
 import { FadeIn } from "./FadeIn";
-import type { Category } from "@/lib/content";
 import styles from "./screens.module.css";
 
 interface EntryScreenProps {
-  prompt: string;
-  onSelect: (category: Category) => void;
+  entryLine: string;
+  day: number;
+  onBegin: () => void;
 }
 
-export function EntryScreen({ prompt, onSelect }: EntryScreenProps) {
+export function EntryScreen({ entryLine, day, onBegin }: EntryScreenProps) {
   return (
-    <div className={styles.screenWrap}>
+    <div className={styles.screenWrap} onClick={onBegin}>
       <FadeIn delay={0.2}>
-        <h1 className={styles.now}>Now</h1>
+        <p className={styles.dayLabel}>day {day}</p>
       </FadeIn>
 
-      <FadeIn delay={0.6}>
-        <p className={styles.prompt}>{prompt}</p>
+      <FadeIn delay={0.7}>
+        <p className={styles.entryLine}>{entryLine}</p>
       </FadeIn>
 
-      <div className={styles.options}>
-        <FadeIn delay={0.9}>
-          <button
-            className={styles.option}
-            onClick={() => onSelect("avoiding")}
-          >
-            <span className={styles.optionDot}>·</span>
-            Something I'm avoiding
-          </button>
-        </FadeIn>
-
-        <FadeIn delay={1.05}>
-          <button
-            className={styles.option}
-            onClick={() => onSelect("overthinking")}
-          >
-            <span className={styles.optionDot}>·</span>
-            Something I can't stop thinking about
-          </button>
-        </FadeIn>
-
-        <FadeIn delay={1.2}>
-          <button
-            className={styles.option}
-            onClick={() => onSelect("nothing")}
-          >
-            <span className={styles.optionDot}>·</span>
-            Nothing obvious
-          </button>
-        </FadeIn>
-      </div>
+      <FadeIn delay={1.6}>
+        <p className={styles.tapHint}>tap</p>
+      </FadeIn>
     </div>
   );
 }
