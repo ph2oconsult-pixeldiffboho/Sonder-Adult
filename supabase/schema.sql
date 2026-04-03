@@ -1,56 +1,61 @@
 -- ─────────────────────────────────────────────
--- SONDER ADULT — SUPABASE SCHEMA
--- Run this in Supabase SQL Editor
+-- SONDER ADULT — SUPABASE SCHEMA v2
+-- Run this ONCE in Supabase SQL Editor
+-- Safe to re-run (drops and recreates)
 -- ─────────────────────────────────────────────
 
--- Sessions table: one row per completed interaction
-create table if not exists sessions (
-  id uuid default gen_random_uuid() primary key,
-  user_id text not null,
-  category text not null check (category in ('avoiding', 'overthinking', 'nothing')),
-  response_shown text not null,
-  action_shown text not null,
-  closing_shown text not null,
-  duration_ms integer not null default 0,
+-- ── CLEAN SLATE ──
+drop view if exists user_progress;
+drop table if exists sessions;
+drop table if exists user_state;
+
+-- ── USER STATE ──
+create table user_state (
+  user_id text primary key,
+  current_sequence text not null default 'overthinking',
+  current_day integer not null default 1 check (current_day between 1 and 7),
+  sequence_started_at timestamptz default now(),
+  last_completed_at timestamptz,
+  sequences_completed text[] default '{}'::text[],
   created_at timestamptz default now()
 );
 
--- Index: fast lookup by user for pattern recognition
-create index if not exists idx_sessions_user_id on sessions (user_id);
+-- ── SESSION LOG ──
+create table sessions (
+  id uuid default gen_random_uuid() primary key,
+  user_id text not null,
+  sequence_id text not null,
+  day_number integer not null check (day_number between 1 and 7),
+  duration_ms integer not null default 0,
+  completed_at timestamptz default now()
+);
 
--- Index: time-based queries (recent sessions, streaks)
-create index if not exists idx_sessions_created_at on sessions (user_id, created_at desc);
+-- ── INDEXES ──
+create index idx_sessions_user on sessions (user_id);
+create index idx_sessions_time on sessions (user_id, completed_at desc);
 
--- Row Level Security: users can only read/write their own sessions
+-- ── ROW LEVEL SECURITY ──
+alter table user_state enable row level security;
 alter table sessions enable row level security;
 
--- Policy: anyone can insert (anonymous users via anon key)
-create policy "Anyone can insert sessions"
-  on sessions for insert
-  with check (true);
+create policy "Insert own state" on user_state for insert with check (true);
+create policy "Read own state" on user_state for select using (true);
+create policy "Update own state" on user_state for update using (true);
 
--- Policy: users can only read their own sessions
-create policy "Users read own sessions"
-  on sessions for select
-  using (user_id = current_setting('request.headers')::json->>'x-user-id'
-    or auth.role() = 'anon');
+create policy "Insert sessions" on sessions for insert with check (true);
+create policy "Read own sessions" on sessions for select using (true);
 
--- Note: Since we use anonymous UUIDs stored client-side (not Supabase Auth),
--- the select policy is permissive. For production, consider:
--- 1. Adding Supabase Auth with anonymous sign-in
--- 2. Or scoping RLS to auth.uid()
--- For MVP, the anon key + client-side UUID is sufficient.
-
--- ─────────────────────────────────────────────
--- OPTIONAL: Analytics view
--- ─────────────────────────────────────────────
-
-create or replace view session_patterns as
+-- ── ANALYTICS VIEW ──
+create or replace view user_progress as
 select
-  user_id,
-  category,
-  count(*) as times_chosen,
-  round(avg(duration_ms)) as avg_duration_ms,
-  max(created_at) as last_seen
-from sessions
-group by user_id, category;
+  u.user_id,
+  u.current_sequence,
+  u.current_day,
+  u.last_completed_at,
+  array_length(u.sequences_completed, 1) as total_sequences_completed,
+  count(s.id) as total_sessions,
+  round(avg(s.duration_ms)) as avg_duration_ms
+from user_state u
+left join sessions s on s.user_id = u.user_id
+group by u.user_id, u.current_sequence, u.current_day,
+         u.last_completed_at, u.sequences_completed;
