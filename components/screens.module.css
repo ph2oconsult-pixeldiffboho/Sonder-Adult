@@ -12,18 +12,19 @@
   cursor: default;
   user-select: none;
   -webkit-user-select: none;
+  position: relative;
 }
 
 /* ── Entry ── */
 
-.dayLabel {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: lowercase;
-  color: #333;
-  font-weight: 400;
-  margin-bottom: 48px;
+.anchorLine {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #777;
+  font-weight: 300;
   text-align: center;
+  max-width: 280px;
+  margin-bottom: 32px;
 }
 
 .entryLine {
@@ -45,14 +46,15 @@
   text-align: center;
   max-width: 300px;
   font-style: italic;
+  white-space: pre-line;
 }
 
-/* ── Action ── */
+/* ── Moment ── */
 
-.actionLine {
+.momentLine {
   font-size: 18px;
   line-height: 1.6;
-  color: #999;
+  color: #aaa;
   font-weight: 300;
   text-align: center;
   max-width: 280px;
@@ -71,12 +73,16 @@
 
 /* ── Shared ── */
 
-.tapHint {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: #222;
-  margin-top: 64px;
-  text-transform: lowercase;
+.breathDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.12;
+  position: absolute;
+  bottom: -64px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* ── Done ── */
@@ -85,7 +91,25 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #333;
+  background: #555;
+}
+
+.doneLine {
+  font-size: 14px;
+  color: #555;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  margin-top: 48px;
+  text-align: center;
+}
+
+.wordmark {
+  font-size: 11px;
+  color: #333;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  margin-top: 64px;
+  text-align: center;
 }
 
 .againBtn {
@@ -116,8 +140,171 @@
 .alreadyDone {
   font-size: 14px;
   letter-spacing: 0.05em;
-  color: #333;
+  color: #555;
   margin-top: 48px;
   font-weight: 300;
   text-align: center;
+}
+
+/* ── Transition ── */
+
+.transitionInner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.transitionLine {
+  font-size: 19px;
+  line-height: 1.65;
+  color: #999;
+  font-weight: 300;
+  text-align: center;
+  max-width: 300px;
+}
+
+.transitionCommit {
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: #555;
+  font-weight: 400;
+  text-align: center;
+}
+
+.transitionButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 56px;
+}
+
+.primaryBtn {
+  background: transparent;
+  border: 1px solid #333;
+  padding: 14px 48px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.primaryBtn:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.secondaryBtn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  color: #2a2a2a;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 300ms ease;
+}
+
+.secondaryBtn:hover {
+  color: #555;
+}
+
+/* ── First Entry ── */
+
+.firstEntryInner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.firstEntryGrounding {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  font-weight: 300;
+  text-align: center;
+  max-width: 300px;
+  letter-spacing: 0.02em;
+}
+
+.firstEntryLine {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #aaa;
+  font-weight: 300;
+  text-align: center;
+  max-width: 300px;
+}
+
+/* ── Reanchor ── */
+
+.reanchorLine {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #888;
+  font-weight: 300;
+  text-align: center;
+  max-width: 280px;
+}
+
+/* ── Seen Layer ── */
+
+.seenOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.seenContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  max-width: 300px;
+}
+
+.seenPattern {
+  font-size: 14px;
+  color: #777;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  text-align: center;
+  cursor: default;
+}
+
+.seenLine {
+  font-size: 12px;
+  color: #555;
+  font-weight: 300;
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ── Send ── */
+
+.sendInner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.sendLine {
+  font-size: 19px;
+  line-height: 1.6;
+  color: #999;
+  font-weight: 300;
+  text-align: center;
+  max-width: 280px;
 }

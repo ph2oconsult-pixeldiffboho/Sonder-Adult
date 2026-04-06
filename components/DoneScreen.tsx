@@ -3,22 +3,20 @@
 import { FadeIn } from "./FadeIn";
 import styles from "./screens.module.css";
 
-interface DoneScreenProps {
-  isLastDay: boolean;
-}
-
-export function DoneScreen({ isLastDay }: DoneScreenProps) {
+export function DoneScreen() {
   return (
     <div className={styles.screenWrap}>
       <FadeIn delay={0.3}>
         <div className={styles.doneDot} />
       </FadeIn>
 
-      {isLastDay && (
-        <FadeIn delay={1.5}>
-          <p className={styles.sequenceEnd}>Something new begins tomorrow.</p>
-        </FadeIn>
-      )}
+      <FadeIn delay={1.3} duration={1.8}>
+        <p className={styles.doneLine}>You'll see it again.</p>
+      </FadeIn>
+
+      <FadeIn delay={3.5} duration={2.0}>
+        <p className={styles.wordmark}>sonder</p>
+      </FadeIn>
     </div>
   );
 }

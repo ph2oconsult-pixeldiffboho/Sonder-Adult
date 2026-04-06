@@ -1,5 +1,11 @@
 import { getSupabase } from "./supabase";
-import { SEQUENCES, getDayContent, type DayContent } from "./content";
+import {
+  SEQUENCES,
+  getDayContent,
+  getTransition,
+  type DayContent,
+  type Transition,
+} from "./content";
 
 // ─────────────────────────────────────────────
 // ANONYMOUS USER ID
@@ -24,16 +30,16 @@ export function getOrCreateUserId(): string {
 export interface UserState {
   user_id: string;
   current_sequence: string;
-  current_day: number; // 1–7
+  current_day: number;
   sequence_started_at: string;
   last_completed_at: string | null;
-  sequences_completed: string[]; // IDs of finished sequences
+  sequences_completed: string[];
+  pending_transition: boolean;
+  last_notification_at: string | null;
+  last_transition_declined_at: string | null;
+  last_seen_at: string | null;
 }
 
-/**
- * Get or create the user's state.
- * New users are assigned their first sequence.
- */
 export async function getUserState(userId: string): Promise<UserState> {
   try {
     const { data, error } = await getSupabase()
@@ -42,12 +48,19 @@ export async function getUserState(userId: string): Promise<UserState> {
       .eq("user_id", userId)
       .single();
 
-    if (data && !error) return data as UserState;
+    if (data && !error) {
+      return {
+        ...data,
+        pending_transition: data.pending_transition ?? false,
+        last_notification_at: data.last_notification_at ?? null,
+        last_transition_declined_at: data.last_transition_declined_at ?? null,
+        last_seen_at: data.last_seen_at ?? null,
+      } as UserState;
+    }
   } catch {
-    // No state yet — fall through to create
+    // No state — fall through
   }
 
-  // New user: assign first sequence
   const newState: UserState = {
     user_id: userId,
     current_sequence: SEQUENCES[0].id,
@@ -55,6 +68,10 @@ export async function getUserState(userId: string): Promise<UserState> {
     sequence_started_at: new Date().toISOString(),
     last_completed_at: null,
     sequences_completed: [],
+    pending_transition: false,
+    last_notification_at: null,
+    last_transition_declined_at: null,
+    last_seen_at: null,
   };
 
   try {
@@ -67,46 +84,130 @@ export async function getUserState(userId: string): Promise<UserState> {
 }
 
 // ─────────────────────────────────────────────
-// TODAY'S CONTENT
+// WHAT TO SHOW THE USER
 // ─────────────────────────────────────────────
+
+export type UserView =
+  | { type: "first_entry"; session: TodaySession }
+  | { type: "reanchor"; line: string; session: TodaySession }
+  | { type: "session"; session: TodaySession }
+  | { type: "transition"; transition: Transition; fromSequenceId: string }
+  | { type: "already_done" }
+  | { type: "journey_complete" };
 
 export interface TodaySession {
   content: DayContent;
   sequenceId: string;
   day: number;
   isLastDay: boolean;
-  alreadyCompletedToday: boolean;
 }
 
 /**
- * Get the content for today's session.
- * If the user already completed today, flag it (but still return content).
+ * Calculate days since a given ISO timestamp.
+ * Uses local timezone for day boundaries.
  */
-export async function getTodaySession(userId: string): Promise<TodaySession> {
+function daysSince(isoString: string): number {
+  const then = new Date(isoString);
+  const now = new Date();
+  // Reset to midnight local for both
+  const thenDay = new Date(then.getFullYear(), then.getMonth(), then.getDate());
+  const nowDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.floor((nowDay.getTime() - thenDay.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Determine what the user should see right now.
+ *
+ * Priority:
+ * 0. If brand new user → show first entry flow then session
+ * 1. If pending_transition → show transition
+ * 2. If already completed today → show "come back tomorrow"
+ * 3. If returning after gap (2+ days) → show reanchor then session
+ * 4. Otherwise → show today's session
+ */
+export async function getUserView(userId: string): Promise<UserView> {
   const state = await getUserState(userId);
 
-  // Check if already completed today
+  // Record this visit
+  recordSeen(userId);
+
+  // 0. Brand new user — never completed anything, on Day 1, no sequences done
+  const isNewUser =
+    !state.last_completed_at &&
+    state.current_day === 1 &&
+    (!state.sequences_completed || state.sequences_completed.length === 0);
+
+  // 1. Pending transition
+  if (state.pending_transition) {
+    const transition = getTransition(state.current_sequence);
+    if (transition) {
+      return {
+        type: "transition",
+        transition,
+        fromSequenceId: state.current_sequence,
+      };
+    }
+    return { type: "journey_complete" };
+  }
+
+  // 2. Already completed today
   const alreadyCompletedToday = state.last_completed_at
     ? isSameDay(new Date(state.last_completed_at), new Date())
     : false;
 
+  if (alreadyCompletedToday) {
+    return { type: "already_done" };
+  }
+
+  // 3. Build session content
   const content = getDayContent(state.current_sequence, state.current_day);
 
-  // Fallback if somehow content is null (shouldn't happen)
   const safeContent: DayContent = content || {
     entry: "What's here right now?",
-    response: "You showed up. That's the thing.",
-    action: "Stay for a moment.",
-    close: "That's enough.",
+    response: "Something is present.",
+    moment: "It's there.",
+    close: "It's still there.",
   };
 
-  return {
+  const session: TodaySession = {
     content: safeContent,
     sequenceId: state.current_sequence,
     day: state.current_day,
     isLastDay: state.current_day === 7,
-    alreadyCompletedToday,
   };
+
+  // New user gets the entry flow first, then flows into session
+  if (isNewUser) {
+    return { type: "first_entry", session };
+  }
+
+  // 4. Check for gap return (use last_completed_at since that's the last engagement)
+  if (state.last_completed_at) {
+    const gap = daysSince(state.last_completed_at);
+    if (gap >= 7) {
+      return { type: "reanchor", line: "It didn't go anywhere.", session };
+    }
+    if (gap >= 2) {
+      return { type: "reanchor", line: "It's been happening.", session };
+    }
+  }
+
+  return { type: "session", session };
+}
+
+/**
+ * Record that the user opened the app.
+ * Fire-and-forget — don't block the view.
+ */
+function recordSeen(userId: string): void {
+  getSupabase()
+    .from("user_state")
+    .update({ last_seen_at: new Date().toISOString() })
+    .eq("user_id", userId)
+    .then(
+      () => {},
+      () => {}
+    );
 }
 
 // ─────────────────────────────────────────────
@@ -114,9 +215,9 @@ export async function getTodaySession(userId: string): Promise<TodaySession> {
 // ─────────────────────────────────────────────
 
 /**
- * Record a completed session and advance the user.
- * - If day < 7: advance to next day
- * - If day = 7: mark sequence complete, assign next sequence
+ * Record completed session and advance.
+ * - Day < 7: advance to next day
+ * - Day 7: set pending_transition = true (do NOT advance yet)
  */
 export async function completeSession(
   userId: string,
@@ -126,7 +227,7 @@ export async function completeSession(
 ): Promise<void> {
   const now = new Date().toISOString();
 
-  // 1. Record the session log
+  // Log the session
   try {
     await getSupabase().from("sessions").insert([
       {
@@ -141,10 +242,9 @@ export async function completeSession(
     console.error("Session log failed:", e);
   }
 
-  // 2. Advance user state
+  // Advance state
   try {
     if (day < 7) {
-      // Advance to next day
       await getSupabase()
         .from("user_state")
         .update({
@@ -153,19 +253,13 @@ export async function completeSession(
         })
         .eq("user_id", userId);
     } else {
-      // Sequence complete — assign next
-      const state = await getUserState(userId);
-      const completed = [...(state.sequences_completed || []), sequenceId];
-      const nextSequence = pickNextSequence(completed);
-
+      // Day 7 complete — enter transition state
+      // Do NOT advance to next sequence yet
       await getSupabase()
         .from("user_state")
         .update({
-          current_sequence: nextSequence,
-          current_day: 1,
-          sequence_started_at: now,
           last_completed_at: now,
-          sequences_completed: completed,
+          pending_transition: true,
         })
         .eq("user_id", userId);
     }
@@ -175,22 +269,62 @@ export async function completeSession(
 }
 
 // ─────────────────────────────────────────────
-// SEQUENCE ASSIGNMENT
+// TRANSITION ACTIONS
 // ─────────────────────────────────────────────
 
 /**
- * Pick the next sequence the user hasn't done yet.
- * If all are done, cycle back to the first.
+ * User chose "Begin" — advance to next sequence, clear transition flag.
  */
+export async function acceptTransition(userId: string): Promise<void> {
+  const now = new Date().toISOString();
+  const state = await getUserState(userId);
+  const completed = [...(state.sequences_completed || []), state.current_sequence];
+  const nextSequence = pickNextSequence(completed);
+
+  try {
+    await getSupabase()
+      .from("user_state")
+      .update({
+        current_sequence: nextSequence,
+        current_day: 1,
+        sequence_started_at: now,
+        sequences_completed: completed,
+        pending_transition: false,
+        last_transition_declined_at: null,
+      })
+      .eq("user_id", userId);
+  } catch (e) {
+    console.error("Accept transition failed:", e);
+  }
+}
+
+/**
+ * User chose "Not today" — record the decline.
+ * pending_transition stays true.
+ * Timestamp prevents same-day notification re-send.
+ * Next visit brings them back to the same transition.
+ */
+export async function declineTransition(userId: string): Promise<void> {
+  try {
+    await getSupabase()
+      .from("user_state")
+      .update({
+        last_transition_declined_at: new Date().toISOString(),
+      })
+      .eq("user_id", userId);
+  } catch (e) {
+    console.error("Decline transition failed:", e);
+  }
+}
+
+// ─────────────────────────────────────────────
+// SEQUENCE ASSIGNMENT
+// ─────────────────────────────────────────────
+
 function pickNextSequence(completedIds: string[]): string {
   const allIds = SEQUENCES.map((s) => s.id);
   const unseen = allIds.filter((id) => !completedIds.includes(id));
-
-  if (unseen.length > 0) {
-    return unseen[0];
-  }
-
-  // All sequences completed — restart from beginning
+  if (unseen.length > 0) return unseen[0];
   return allIds[0];
 }
 

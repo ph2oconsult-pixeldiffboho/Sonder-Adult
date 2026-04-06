@@ -17,6 +17,10 @@ create table user_state (
   sequence_started_at timestamptz default now(),
   last_completed_at timestamptz,
   sequences_completed text[] default '{}'::text[],
+  pending_transition boolean not null default false,
+  last_notification_at timestamptz,
+  last_transition_declined_at timestamptz,
+  last_seen_at timestamptz,
   created_at timestamptz default now()
 );
 
@@ -51,11 +55,17 @@ select
   u.user_id,
   u.current_sequence,
   u.current_day,
+  u.pending_transition,
   u.last_completed_at,
+  u.last_notification_at,
+  u.last_transition_declined_at,
+  u.last_seen_at,
   array_length(u.sequences_completed, 1) as total_sequences_completed,
   count(s.id) as total_sessions,
   round(avg(s.duration_ms)) as avg_duration_ms
 from user_state u
 left join sessions s on s.user_id = u.user_id
 group by u.user_id, u.current_sequence, u.current_day,
-         u.last_completed_at, u.sequences_completed;
+         u.pending_transition, u.last_completed_at,
+         u.last_notification_at, u.last_transition_declined_at,
+         u.last_seen_at, u.sequences_completed;

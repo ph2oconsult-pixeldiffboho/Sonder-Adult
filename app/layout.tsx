@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 export const metadata: Metadata = {
   title: "Sonder",
   description: "Notice what's already happening.",
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {

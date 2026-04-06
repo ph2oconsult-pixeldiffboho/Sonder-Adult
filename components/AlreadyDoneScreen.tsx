@@ -11,7 +11,7 @@ export function AlreadyDoneScreen() {
       </FadeIn>
 
       <FadeIn delay={1.0}>
-        <p className={styles.alreadyDone}>Come back tomorrow.</p>
+        <p className={styles.alreadyDone}>You'll see it again.</p>
       </FadeIn>
     </div>
   );

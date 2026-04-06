@@ -3,10 +3,10 @@
 :root {
   --bg: #0a0a0a;
   --fg: #d4d4d4;
-  --fg-muted: #888;
-  --fg-dim: #555;
-  --fg-ghost: #333;
-  --fg-invisible: #1a1a1a;
+  --fg-muted: #999;
+  --fg-dim: #777;
+  --fg-ghost: #444;
+  --fg-invisible: #222;
   --font: "DM Sans", "Helvetica Neue", sans-serif;
 }
 

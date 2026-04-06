@@ -4,16 +4,16 @@ import { useState, useEffect, useCallback } from "react";
 import { FadeIn } from "./FadeIn";
 import styles from "./screens.module.css";
 
-interface CloseScreenProps {
+interface MomentScreenProps {
   text: string;
   onContinue: () => void;
 }
 
-export function CloseScreen({ text, onContinue }: CloseScreenProps) {
+export function MomentScreen({ text, onContinue }: MomentScreenProps) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 4000);
+    const t = setTimeout(() => setReady(true), 5000);
     return () => clearTimeout(t);
   }, []);
 
@@ -23,8 +23,8 @@ export function CloseScreen({ text, onContinue }: CloseScreenProps) {
 
   return (
     <div className={styles.screenWrap} onClick={handleTap}>
-      <FadeIn delay={0.6} duration={1.2}>
-        <p className={styles.closeLine}>{text}</p>
+      <FadeIn delay={0.3}>
+        <p className={styles.momentLine}>{text}</p>
       </FadeIn>
 
       {ready && (

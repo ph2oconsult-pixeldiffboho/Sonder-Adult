@@ -1,554 +1,699 @@
 // ─────────────────────────────────────────────
-// SONDER ADULT — SEQUENCED CONTENT (PRODUCTION)
+// SONDER ADULT — PATTERN RECOGNITION CONTENT
 // ─────────────────────────────────────────────
-// 10 sequences × 7 days = 70 days of content
-// Ordered by launch priority (1–3 ship first)
-// All lines red-teamed and revised
-// Content is NOT random. Day order matters.
+// 10 sequences × 7 days = 70 days
+// Model: Notice → See Again → Recognition → Holding
+// No instruction. No intervention. No improvement language.
+// The user sees. That's the product.
 
 export interface DayContent {
+  anchor?: string; // Day 1 only — shown before entry line
   entry: string;
   response: string;
-  action: string;
+  moment: string;
   close: string;
+  notification?: string;
+}
+
+export interface Transition {
+  screen1: string;
+  screen2: string;
+  screen3: string;
+  primaryCta: string;
+  secondaryCta: string;
+  notification: string;
 }
 
 export interface Sequence {
   id: string;
   pattern: string;
   days: [DayContent, DayContent, DayContent, DayContent, DayContent, DayContent, DayContent];
+  transition?: Transition;
 }
 
 export const SEQUENCES: Sequence[] = [
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 1. OVERTHINKING (Launch sequence #1)
-  // Cleanest arc, most universally relatable
+  // 1. OVERTHINKING
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "overthinking",
     pattern: "The loop that feels like progress",
     days: [
       {
+        anchor: "It's been running.",
         entry: "What thought showed up more than once today?",
-        response: "You've visited it before. And you'll visit it again. That's worth noticing.",
-        action: "Just mark it. The same thought, again.",
-        close: "Leave it mid-sentence.",
+        response: "You've seen it before.",
+        moment: "It stayed.",
+        close: "It didn't end anywhere.",
+        notification: "It circled back.",
       },
       {
-        entry: "Did it come back?",
-        response: "It always does. That's not the problem. The problem is you think this time will resolve it.",
-        action: "Count the revisits. Don't judge them. Just count.",
-        close: "That number is the information.",
+        entry: "It came back.",
+        response: "Same place it starts.",
+        moment: "It ran again.",
+        close: "Nothing settled.",
+        notification: "Still running.",
       },
       {
-        entry: "What are you actually trying to solve?",
-        response: "Not the thing on the surface. Something underneath it that you haven't named.",
-        action: "Name the feeling behind the thought. One word.",
-        close: "That's closer.",
+        entry: "What are you trying to resolve?",
+        response: "It hasn't moved.",
+        moment: "It ran again.",
+        close: "Same path.",
+        notification: "It restarted.",
       },
       {
-        entry: "Has the thinking changed anything yet?",
-        response: "Same calculation. Same result. But you ran it again anyway.",
-        action: "Notice what it feels like to not think about it. Even for five seconds.",
-        close: "That gap is real.",
+        entry: "You've been here before.",
+        response: "This is the loop.",
+        moment: "It starts the same way.",
+        close: "It keeps going.",
+        notification: "Same loop.",
       },
       {
-        entry: "What are you avoiding by staying in the loop?",
-        response: "Thinking is the safest thing you can do. That's why you can't stop.",
-        action: "Feel what's underneath the need to figure it out.",
-        close: "That's the uncomfortable part.",
+        entry: "It started again.",
+        response: "Same beginning. But it slowed earlier.",
+        moment: "It didn't go as far this time.",
+        close: "It ran shorter.",
+        notification: "Same rhythm.",
       },
       {
-        entry: "What would happen if you trusted your first answer?",
-        response: "You had it before the loop started. Everything since has been negotiation.",
-        action: "Say it. The answer you keep overriding.",
-        close: "That was always it.",
+        entry: "It tried again.",
+        response: "It was already running.",
+        moment: "It didn't build the same way.",
+        close: "It didn't build as far.",
+        notification: "It didn't complete.",
       },
       {
-        entry: "The loop is quieter today.",
-        response: "Not because you solved it. Because you stopped pretending you needed to.",
-        action: "Let the unresolved stay unresolved.",
-        close: "Done.",
+        entry: "It's still there.",
+        response: "It's quieter. Not gone.",
+        moment: "It's visible as it starts.",
+        close: "It's still there.",
       },
     ],
+    transition: {
+      screen1: "The loop is still running. But you're watching it now.",
+      screen2: "Something else has been at the edge. You've been looking past it.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The loop is visible now. Something else is at the edge.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 2. AVOIDANCE (Launch sequence #2)
-  // Broadest appeal, strong "I've been seen" moment
+  // 2. AVOIDANCE
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "avoidance",
     pattern: "The thing you won't look at",
     days: [
       {
-        entry: "What's sitting at the edge of your attention?",
-        response: "You already glanced at it. Then looked away.",
-        action: "Notice where your eyes just went. That direction matters.",
-        close: "That's enough for now.",
+        anchor: "You moved past something.",
+        entry: "What did you move away from today?",
+        response: "It was at the edge.",
+        moment: "You passed it.",
+        close: "It didn't follow.",
+        notification: "It's at the edge again.",
       },
       {
-        entry: "Is it still at the edge?",
-        response: "It didn't move. You did.",
-        action: "Notice how much energy it takes to keep it peripheral.",
-        close: "You can leave it there.",
+        entry: "It was at the edge again.",
+        response: "Same spot.",
+        moment: "The path curved around it.",
+        close: "Nothing changed.",
+        notification: "Same spot.",
       },
       {
-        entry: "How many times have you redirected yourself today?",
-        response: "Every redirection is a decision. You just stopped noticing you're making it.",
-        action: "Catch the next redirect. Don't stop it. Just see it.",
-        close: "That's the pattern.",
+        entry: "How many times did you pass it?",
+        response: "More than once.",
+        moment: "The redirect happened again. Smooth.",
+        close: "Same curve. Same speed.",
+        notification: "Same curve.",
       },
       {
-        entry: "What's the story you tell yourself about why now isn't the time?",
-        response: "The story is always convincing. That's what makes it work.",
-        action: "Hear the story without believing it. Just once.",
-        close: "Stay with that.",
+        entry: "You know the curve.",
+        response: "You know this one.",
+        moment: "It happens before you choose it.",
+        close: "Same direction every time.",
+        notification: "The story played again.",
       },
       {
-        entry: "What does this avoidance protect you from?",
-        response: "You've got a good reason not to look. You always do.",
-        action: "Feel who you'd need to become. That's the real cost.",
-        close: "Harder than it looks.",
+        entry: "It showed up again.",
+        response: "Same spot. But the curve was wider this time.",
+        moment: "The redirect was slower.",
+        close: "It took longer to pass.",
+        notification: "Same shape underneath.",
       },
       {
-        entry: "What if the avoidance is heavier than the thing?",
-        response: "You keep choosing 'not yet.' But 'not yet' has a cost too, and you've stopped counting.",
-        action: "Hold both for a moment. Notice which one you already know.",
-        close: "Now you've felt it.",
+        entry: "It was closer this time.",
+        response: "The curve didn't go as far around it.",
+        moment: "It lingered at the edge a moment longer.",
+        close: "The distance was shorter.",
+        notification: "The weight is there.",
       },
       {
-        entry: "Look at it directly. What's there?",
-        response: "It's real. But so are you. And you've been acting like only one of those was true.",
-        action: "Let it be its actual size.",
-        close: "You can go.",
+        entry: "It's at the edge.",
+        response: "The curve is still there. But it's smaller.",
+        moment: "The thing and the curve. Both visible.",
+        close: "The edge hasn't moved.",
       },
     ],
+    transition: {
+      screen1: "The thing is still there. So are you.",
+      screen2: "Something keeps almost happening. It surfaces and sinks.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The avoidance is visible. Something else keeps surfacing.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 3. UNFINISHED DECISIONS (Launch sequence #3)
-  // The differentiator — no other app does this
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  {
-    id: "decisions",
-    pattern: "The thing you keep almost doing",
-    days: [
-      {
-        entry: "What have you been meaning to decide?",
-        response: "It surfaced again just now. It does that. Usually at the edges of busier thoughts.",
-        action: "Notice how long this decision has been waiting.",
-        close: "That's enough for now.",
-      },
-      {
-        entry: "Is it still undecided?",
-        response: "Not because you lack information. You've had enough information for a while now.",
-        action: "Notice what you tell yourself about why you're still waiting.",
-        close: "You can leave it there.",
-      },
-      {
-        entry: "How many times have you almost decided?",
-        response: "You've gotten close. Then pulled back. Each time with a slightly different reason but the same result.",
-        action: "Feel the pull-back. Not the reason. The sensation of retreating.",
-        close: "That retreat is the pattern.",
-      },
-      {
-        entry: "What are you calling 'not ready'?",
-        response: "You keep raising the bar for 'ready.' That's not preparation.",
-        action: "Ask yourself: ready for what, specifically? Notice if the answer keeps shifting.",
-        close: "A moving target can't be hit. That's the design.",
-      },
-      {
-        entry: "What happens to you — not around you — if you decide?",
-        response: "Something becomes real. Something else becomes impossible. And you'd have to live with both.",
-        action: "Feel the weight of one door closing. Not the option. The closing.",
-        close: "That's what you've been avoiding.",
-      },
-      {
-        entry: "Who are you without this decision hanging over you?",
-        response: "You've carried it so long you've forgotten what you'd think about without it.",
-        action: "Imagine the decision made. Feel the silence where the deliberation used to be.",
-        close: "That silence is real.",
-      },
-      {
-        entry: "You already know what you'd choose.",
-        response: "You've known for a while. The rest has been ceremony.",
-        action: "Let the knowing be there. You don't have to act on it today. Just stop pretending you don't have it.",
-        close: "You can go.",
-      },
-    ],
-  },
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 4. INTERNAL CONFLICT
-  // Emotionally sophisticated, strong Day 6
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  {
-    id: "conflict",
-    pattern: "The argument you're having with yourself",
-    days: [
-      {
-        entry: "What are you torn about right now?",
-        response: "There are two answers living in you. Both feel true. That's why it won't settle.",
-        action: "Notice both sides. Don't pick one. Just feel them both at the same time.",
-        close: "That's enough.",
-      },
-      {
-        entry: "Is the argument still running?",
-        response: "You've been switching sides. Sometimes mid-sentence. Sometimes mid-thought.",
-        action: "Notice which side spoke first today. Before you edited.",
-        close: "That one is worth remembering.",
-      },
-      {
-        entry: "How long have these two been fighting?",
-        response: "Longer than this situation. This is an old disagreement wearing a new costume.",
-        action: "Feel the familiarity. You've been here with different specifics but the same tension.",
-        close: "That's the pattern.",
-      },
-      {
-        entry: "What does each side want you to protect?",
-        response: "Each side is protecting something. You haven't asked what.",
-        action: "Name what each side is guarding. Not arguing for. Guarding.",
-        close: "Now you see the stakes.",
-      },
-      {
-        entry: "What if both sides are right?",
-        response: "The conflict doesn't come from one side being wrong. It comes from you believing you can only honour one.",
-        action: "Hold both for a moment. Don't call it anything.",
-        close: "Stay with that.",
-      },
-      {
-        entry: "What are you afraid of losing in the resolution?",
-        response: "Not the option you don't pick. The part of you that wanted it. That part doesn't just disappear.",
-        action: "Feel the grief of the unlived version. It's already there.",
-        close: "That grief is the cost. Not the decision.",
-      },
-      {
-        entry: "The argument is quieter today.",
-        response: "Not because you resolved it. Because you stopped needing it to be resolved before you could move.",
-        action: "Let the tension exist. Walk with it instead of against it.",
-        close: "Done.",
-      },
-    ],
-  },
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 5. CONTROL
-  // Strong premise, precise Days 2–3
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  {
-    id: "control",
-    pattern: "The grip that won't open",
-    days: [
-      {
-        entry: "What did you try to manage before it even started?",
-        response: "You had a plan before your feet hit the floor.",
-        action: "Notice the plan. Not whether it's good. Just that it was there before anything happened.",
-        close: "That's enough.",
-      },
-      {
-        entry: "What happened when something went off-script today?",
-        response: "Not what happened externally. What happened in you.",
-        action: "Notice the speed of the internal response. How fast the correction impulse fired.",
-        close: "Leave it there.",
-      },
-      {
-        entry: "How many outcomes did you rehearse before lunch?",
-        response: "You've been running simulations. Most of them for things that will never happen.",
-        action: "Pick one simulation. Notice that it hasn't happened yet.",
-        close: "That was never real.",
-      },
-      {
-        entry: "Who taught you that unplanned meant unsafe?",
-        response: "Someone did. Or something. And the grip has been there ever since.",
-        action: "Feel the grip without explaining it.",
-        close: "Stay with that.",
-      },
-      {
-        entry: "What are you protecting yourself from feeling?",
-        response: "Something that would happen to you, not because of you. That's the part you can't stand.",
-        action: "Let yourself not know what happens next. Just for a moment.",
-        close: "You're still here.",
-      },
-      {
-        entry: "Has the control actually prevented what you're afraid of?",
-        response: "It gave you something to do. That's not nothing. But it's not what you think it is either.",
-        action: "Notice the difference between prepared and braced.",
-        close: "One of them is exhausting.",
-      },
-      {
-        entry: "What if you opened your hands?",
-        response: "Not as a decision. Just to see what stays without being held.",
-        action: "Unclench one thing. Hands. Jaw. A plan. Any of it.",
-        close: "Done.",
-      },
-    ],
-  },
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 6. DISTRACTION
-  // Unique angle, strong "exit" thread
+  // 3. DISTRACTION
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "distraction",
     pattern: "The exit you don't remember taking",
     days: [
       {
+        anchor: "You left for a moment.",
         entry: "Where did the last hour go?",
-        response: "You left. Not physically. But you checked out and you're not sure when.",
-        action: "Notice what you reached for. Phone. Task. Food. Scroll. Just name the exit.",
-        close: "That's enough.",
+        response: "You left. Not physically.",
+        moment: "You reached for something. Not clear what.",
+        close: "You didn't decide to leave. You just left.",
+        notification: "It left without deciding.",
       },
       {
-        entry: "Did you leave again today?",
-        response: "Same pattern. Different excuse. You barely noticed the switch.",
-        action: "Notice how smooth the departure was. No friction. No decision. Just gone.",
-        close: "That smoothness is the problem.",
+        entry: "It happened again.",
+        response: "Same door.",
+        moment: "You were gone before you noticed.",
+        close: "Nothing stayed.",
+        notification: "It moved again. Smooth.",
       },
       {
-        entry: "What were you feeling right before you checked out?",
-        response: "There was something there. Boredom, restlessness, a low hum of something you didn't want to sit with.",
-        action: "Name what was there before the exit. One word.",
-        close: "That word is what you keep leaving.",
+        entry: "You left again without choosing to.",
+        response: "Same exit. No choosing.",
+        moment: "You were already gone.",
+        close: "Same door.",
+        notification: "Something was before the exit.",
       },
       {
-        entry: "How many times did you exit today without choosing to?",
-        response: "You lost count because most of them didn't feel like decisions. That's how embedded this is.",
-        action: "Catch one exit in real time today. You won't stop it. Just see it happen.",
-        close: "Seeing it is the whole point.",
+        entry: "The exits kept happening.",
+        response: "Most didn't feel like decisions.",
+        moment: "No friction. You were just gone.",
+        close: "It doesn't stop here.",
+        notification: "No friction at all.",
       },
       {
-        entry: "What are you protecting yourself from by staying distracted?",
-        response: "Not danger. Presence. Being here, in this, without an escape route.",
-        action: "Feel what it's like to have nowhere to go. Even for five seconds.",
-        close: "That's what you keep avoiding.",
+        entry: "It happened again.",
+        response: "Same exit. But it took a moment longer to start.",
+        moment: "The leaving was slower this time.",
+        close: "It didn't go as smoothly.",
+        notification: "Same arc. Different door.",
       },
       {
-        entry: "What would your day look like if you didn't leave?",
-        response: "Slower. Quieter. The kind of day you keep escaping from.",
-        action: "Notice the resistance to that image. The part that says 'that sounds boring.'",
-        close: "Notice what that word does to you.",
+        entry: "What's on the other side of staying?",
+        response: "Something you keep leaving instead of meeting.",
+        moment: "You stayed for a moment. It had a feeling.",
+        close: "You don't usually stay long enough for it.",
+        notification: "The staying had a feeling.",
       },
       {
-        entry: "You're still here.",
-        response: "Not because you forced it. Because there's less to run from when you've seen the exits.",
-        action: "Let yourself be here. No performance. No plan to stay.",
-        close: "Done.",
+        entry: "The exits are still there.",
+        response: "Same arc. Same smoothness.",
+        moment: "You can see them now. And the staying.",
+        close: "The exits don't close.",
       },
     ],
+    transition: {
+      screen1: "The arc. The smoothness. The leaving. All visible.",
+      screen2: "Something hits before you think. Fast. Familiar. It's been landing the same way for a while.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The exits are visible. Something else lands first.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 7. EMOTIONAL REACTION
-  // Important pattern, handle with care
+  // 4. INTERNAL CONFLICT
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
-    id: "reaction",
-    pattern: "The speed before the thought",
+    id: "conflict",
+    pattern: "The argument you're having with yourself",
     days: [
       {
-        entry: "What hit you today before you had time to think?",
-        response: "Something moved in you before you had a name for it.",
-        action: "Notice where it landed. Chest. Throat. Stomach. Just locate it.",
-        close: "That's enough.",
+        anchor: "It pulled both ways.",
+        entry: "What were you pulled between today?",
+        response: "Both sides were there.",
+        moment: "It stayed.",
+        close: "Nothing settled.",
+        notification: "Both sides spoke today.",
       },
       {
-        entry: "Did something land the same way today?",
-        response: "Same speed. Same place. You recognised the shape before you recognised the cause.",
-        action: "Notice that you already knew the feeling before you knew the trigger.",
-        close: "Leave it there.",
+        entry: "It came back again.",
+        response: "Same tension.",
+        moment: "It went back and forth.",
+        close: "No decision.",
+        notification: "It switched again.",
       },
       {
-        entry: "How old is this reaction?",
-        response: "Older than today. Older than this week. This reaction was built somewhere you've stopped visiting.",
-        action: "Feel the age of it. Don't explain it. Just feel how long it's been loaded.",
-        close: "That's the pattern.",
+        entry: "It went back and forth again.",
+        response: "Same two sides.",
+        moment: "Both were held.",
+        close: "Still open.",
+        notification: "Old argument. New clothes.",
       },
       {
-        entry: "What did you do right after it hit?",
-        response: "You reacted. Said something, shut down, or performed calm. All of those are the same thing — managing the flash instead of feeling it.",
-        action: "Recall the moment right after. What did you reach for?",
-        close: "That reach is automatic.",
+        entry: "You've been here before.",
+        response: "This is the tension.",
+        moment: "It pulls both ways.",
+        close: "It doesn't resolve.",
+        notification: "Both sides are guarding.",
       },
       {
-        entry: "What if the reaction isn't about what just happened?",
-        response: "The situation is today. The reaction is older. You've felt this mismatch before.",
-        action: "Feel the mismatch between the size of the trigger and the size of the reaction.",
-        close: "That gap is the information.",
+        entry: "It showed up again.",
+        response: "Same pull. But it didn't escalate as fast.",
+        moment: "The back-and-forth was slower this time.",
+        close: "It didn't build the same way.",
+        notification: "It's visible from outside.",
       },
       {
-        entry: "What would happen if you didn't react at the usual speed?",
-        response: "There's a moment between the flash and the response. You usually skip it.",
-        action: "Imagine the flash arriving. Now imagine not moving. Feel what lives in that pause.",
-        close: "That's the part you've never stayed for.",
+        entry: "It came back.",
+        response: "It stayed.",
+        moment: "It wasn't forced.",
+        close: "It didn't collapse.",
+        notification: "Something would go quiet.",
       },
       {
-        entry: "The flash came today. What did you notice?",
-        response: "It's still fast. But you saw it arrive this time. That changes everything and nothing at the same time.",
-        action: "Let the reaction and the awareness exist together.",
-        close: "You can go.",
+        entry: "It's still there.",
+        response: "Both sides remain.",
+        moment: "It sat there.",
+        close: "It holds without closing.",
       },
     ],
+    transition: {
+      screen1: "Both sides are visible now. The argument is still running.",
+      screen2: "Your hands are tighter than you think. Something has been gripping.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The argument is visible. Something else is gripping.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 8. COMPARISON
-  // Familiar territory but well-executed
+  // 5. COMPARISON
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "comparison",
     pattern: "The mirror that isn't yours",
     days: [
       {
+        anchor: "You measured it.",
         entry: "Who made you feel behind today?",
-        response: "You measured yourself against someone. Before you even noticed you were doing it.",
-        action: "Just name them. Silently. That's all.",
-        close: "That's enough.",
+        response: "The measuring was already running.",
+        moment: "It started before the choosing.",
+        close: "It was automatic.",
+        notification: "The measuring ran again.",
       },
       {
-        entry: "Did you check again?",
-        response: "The comparison happened faster this time. It's getting automatic.",
-        action: "Notice the impulse before you follow it. There's a gap there.",
-        close: "Leave it in the gap.",
+        entry: "The check happened again.",
+        response: "Same impulse. Faster this time.",
+        moment: "Same person.",
+        close: "Nothing shifted.",
+        notification: "Faster this time.",
       },
       {
-        entry: "What exactly are you comparing?",
-        response: "Not their life. Your idea of their life. Built from fragments you chose to assemble.",
-        action: "Notice what you filled in. The parts you invented.",
-        close: "That was never real.",
+        entry: "The check ran again.",
+        response: "Same person. Same result.",
+        moment: "You built them up. You skipped yourself.",
+        close: "Same sequence.",
+        notification: "The gaps got filled.",
       },
       {
-        entry: "What do you skip about yourself when you compare?",
-        response: "Everything that doesn't support what you've already decided about yourself.",
-        action: "Name one thing you dismissed about yourself today.",
-        close: "It still counts.",
+        entry: "What gets dismissed when you compare?",
+        response: "Everything that doesn't support what you've already decided.",
+        moment: "Same thing dismissed.",
+        close: "The dismissal is automatic.",
+        notification: "Same thing skipped.",
       },
       {
-        entry: "What do you actually want? Not what they have.",
-        response: "You had to think about it. That pause is telling you something.",
-        action: "Sit with not knowing. That's more honest than the comparison.",
-        close: "Stay there.",
+        entry: "It ran again.",
+        response: "Same sequence. But it stalled partway through.",
+        moment: "It didn't complete the same way.",
+        close: "It broke earlier.",
+        notification: "Same four moves.",
       },
       {
-        entry: "If they disappeared, would the feeling go away?",
-        response: "No. They just gave it a shape. The feeling was already there.",
-        action: "Feel what's underneath the comparison. Before you give it a name.",
-        close: "Now you've felt it.",
+        entry: "If the person disappeared, the feeling wouldn't.",
+        response: "They gave it a shape. The feeling was there before them.",
+        moment: "Something was underneath. Before the person.",
+        close: "The comparison gave it somewhere to go.",
+        notification: "Something underneath.",
       },
       {
-        entry: "Look at your own life. Without the mirror.",
-        response: "It's not behind. It's not ahead. It's just yours. And you keep forgetting that.",
-        action: "Let that be the only thing for a moment.",
-        close: "You can go.",
+        entry: "The comparison is still there.",
+        response: "The building up. The skipping. The feeling underneath.",
+        moment: "The whole pattern is there.",
+        close: "The measuring doesn't stop.",
       },
     ],
+    transition: {
+      screen1: "The structure. The feeling underneath. All visible.",
+      screen2: "There's an audience in your head. You've been performing without knowing it.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The comparison is visible. There's an audience too.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 9. SEEKING APPROVAL
-  // Smallest margin of error — handle carefully
+  // 6. EMOTIONAL REACTION
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    id: "reaction",
+    pattern: "The speed before the thought",
+    days: [
+      {
+        anchor: "It landed fast.",
+        entry: "What hit you today before you had time to think?",
+        response: "Something moved before you had a name for it.",
+        moment: "It landed somewhere specific. Not the thought. The landing.",
+        close: "It landed somewhere specific. It always does.",
+        notification: "It landed again.",
+      },
+      {
+        entry: "It landed again.",
+        response: "Same place.",
+        moment: "The body moved before the thinking started.",
+        close: "Nothing slowed.",
+        notification: "Same place in your body.",
+      },
+      {
+        entry: "It landed the same way again.",
+        response: "Same place. Same speed.",
+        moment: "It arrived the same way. No variation.",
+        close: "You know this one.",
+        notification: "The arrival is old.",
+      },
+      {
+        entry: "What happens right after it hits?",
+        response: "Something fires. A response. Before you choose it.",
+        moment: "The response was already happening. No gap.",
+        close: "The response is faster than the choosing. It doesn't stop when this ends.",
+        notification: "No gap.",
+      },
+      {
+        entry: "It landed again.",
+        response: "Same trigger. But the response was slightly delayed.",
+        moment: "There was a gap that wasn't there before.",
+        close: "It didn't fire as fast.",
+        notification: "Same sequence.",
+      },
+      {
+        entry: "There's a gap you usually skip.",
+        response: "Between the landing and the response. Small. But there.",
+        moment: "The gap held for a moment. Brief.",
+        close: "It exists. It's usually too fast to feel.",
+        notification: "The gap was there.",
+      },
+      {
+        entry: "The reaction is still there.",
+        response: "Same landing. Same speed. But the gap is visible.",
+        moment: "The reaction is there. The gap is there. Both.",
+        close: "The speed hasn't changed.",
+      },
+    ],
+    transition: {
+      screen1: "The landing. The sequence. The gap. All visible.",
+      screen2: "There's someone you keep measuring yourself against. It happens before you notice.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The reaction is visible. Something else keeps measuring.",
+    },
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 7. CONTROL
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    id: "control",
+    pattern: "The grip that won't open",
+    days: [
+      {
+        anchor: "You were already holding it.",
+        entry: "What did you manage before it started?",
+        response: "There was already a plan.",
+        moment: "The body was already tight. It felt like readiness.",
+        close: "The holding was already there.",
+        notification: "Already holding.",
+      },
+      {
+        entry: "It fired again.",
+        response: "Same speed. It felt useful.",
+        moment: "The correction came first.",
+        close: "Nothing loosened.",
+        notification: "The correction was fast.",
+      },
+      {
+        entry: "The rehearsal ran again. Same ones.",
+        response: "Simulations for things that haven't happened.",
+        moment: "The rehearsal was already running. It felt like preparation.",
+        close: "Same rehearsal.",
+        notification: "Same simulation.",
+      },
+      {
+        entry: "The grip has been there a long time.",
+        response: "It hasn't loosened. It doesn't feel like a grip.",
+        moment: "The grip is there even when nothing is wrong.",
+        close: "It has a resting state. It feels like being ready.",
+        notification: "The grip has a resting state.",
+      },
+      {
+        entry: "It fired again.",
+        response: "Same correction. But it was slower to start.",
+        moment: "The grip tightened later than usual.",
+        close: "It didn't lock as fast.",
+        notification: "The grip doesn't scale.",
+      },
+      {
+        entry: "The control has a shape.",
+        response: "Rehearsal. Correction. Rehearsal. Correction. Underneath everything.",
+        moment: "From above it looks like a loop.",
+        close: "Inside it feels like productivity.",
+        notification: "The loop is visible.",
+      },
+      {
+        entry: "The grip is still there.",
+        response: "The rehearsal. The correction. The resting state.",
+        moment: "It still feels useful. It's still a loop.",
+        close: "The grip doesn't open.",
+      },
+    ],
+    transition: {
+      screen1: "The rehearsal. The correction. The loop. All visible.",
+      screen2: "You've been leaving. Not physically. You check out and you're not sure when.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The grip is visible. Something keeps leaving.",
+    },
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 8. SEEKING APPROVAL
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "approval",
     pattern: "The audience that isn't there",
     days: [
       {
-        entry: "Who were you thinking about when you made your last decision?",
-        response: "Not what. Who. There was a face.",
-        action: "Notice the face. Don't change it. Just see who showed up.",
-        close: "You can put that down.",
+        anchor: "Someone was there.",
+        entry: "What tightened when you last spoke?",
+        response: "Something braced before the words came.",
+        moment: "The tightening was there before the speaking.",
+        close: "It braced.",
+        notification: "It tightened again.",
       },
       {
-        entry: "Did you check how it landed?",
-        response: "You already scanned for a reaction. Approval, disappointment, something.",
-        action: "Notice how fast that scan was. Before you even decided to look.",
-        close: "That speed is the information.",
+        entry: "It tightened again.",
+        response: "Same place.",
+        moment: "The bracing came before the room.",
+        close: "Nothing loosened.",
+        notification: "Same place.",
       },
       {
-        entry: "What did you adjust today before anyone asked you to?",
-        response: "You edited yourself. The words, the tone, the version of you that showed up.",
-        action: "Recall the edit. What did the original look like?",
-        close: "That one was more honest.",
+        entry: "It tightened the same way again.",
+        response: "Same moment. Same place.",
+        moment: "The tightening came before the face.",
+        close: "Same bracing.",
+        notification: "Same bracing.",
       },
       {
-        entry: "What version of yourself did you perform today?",
-        response: "There's who you were in the room. And who you were after you left it.",
-        action: "Notice which one knew more.",
-        close: "That gap matters.",
+        entry: "The tightening has a shape.",
+        response: "It braces. It holds. It releases after.",
+        moment: "The holding runs through the whole room.",
+        close: "Same shape every time.",
+        notification: "Same shape.",
       },
       {
-        entry: "Whose rules are you following?",
-        response: "Some of those rules aren't yours. You just never checked.",
-        action: "Pick one rule you live by. Ask: did I choose this?",
-        close: "Now you've seen it.",
+        entry: "It tightened again.",
+        response: "Same place. But it held lighter.",
+        moment: "The bracing was softer this time.",
+        close: "It didn't grip as hard.",
+        notification: "It held lighter.",
       },
       {
-        entry: "What would you want if no one had an opinion about it?",
-        response: "You hesitated. That hesitation is the whole thing.",
-        action: "Let the want exist without a justification.",
-        close: "It doesn't need permission.",
+        entry: "What's underneath the tightening?",
+        response: "Something that doesn't need the room to be safe.",
+        moment: "The tightening was there. And something underneath it.",
+        close: "The underneath doesn't brace.",
+        notification: "Something underneath.",
       },
       {
-        entry: "Who are you when you stop performing?",
-        response: "Less impressive. More honest. You already know which one matters.",
-        action: "Let that version sit here for a moment.",
-        close: "You can go.",
+        entry: "The tightening is still there.",
+        response: "It braces. It holds. Both visible.",
+        moment: "The tightening and the underneath. Both.",
+        close: "The bracing doesn't stop.",
       },
     ],
+    transition: {
+      screen1: "The tightening is visible. The bracing. The holding. The releasing.",
+      screen2: "There's something you don't know. You've been closing the space so you don't have to feel it.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The tightening is visible. Something else keeps closing.",
+    },
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 9. UNFINISHED DECISIONS
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    id: "decisions",
+    pattern: "The thing you keep almost doing",
+    days: [
+      {
+        anchor: "Something almost happened.",
+        entry: "What keeps almost surfacing?",
+        response: "It rose for a moment.",
+        moment: "It was there. Then it dropped.",
+        close: "It dropped.",
+        notification: "It rose again.",
+      },
+      {
+        entry: "It rose again.",
+        response: "Same weight.",
+        moment: "It hovered. Then it dropped.",
+        close: "Same drop.",
+        notification: "Same drop.",
+      },
+      {
+        entry: "It rose the same way again.",
+        response: "Same weight. Same height.",
+        moment: "The drop came at the same point.",
+        close: "Same drop every time.",
+        notification: "Same point.",
+      },
+      {
+        entry: "The rising has a pattern.",
+        response: "Rise. Hover. Drop. Rise. Hover. Drop.",
+        moment: "The hover is where it stalls.",
+        close: "The drop follows the hover.",
+        notification: "Same pattern.",
+      },
+      {
+        entry: "It rose again.",
+        response: "Same weight. But it hovered longer.",
+        moment: "The drop was slower this time.",
+        close: "It didn't fall as fast.",
+        notification: "It hovered longer.",
+      },
+      {
+        entry: "What's in the hover?",
+        response: "Something that doesn't need to land yet.",
+        moment: "The hover was there. Just the hover.",
+        close: "Not rising. Not dropping. Something else.",
+        notification: "The hover was there.",
+      },
+      {
+        entry: "It's still rising and dropping.",
+        response: "The hover is still there. Between them.",
+        moment: "The rise and the drop. Both visible.",
+        close: "The hover stays.",
+      },
+    ],
+    transition: {
+      screen1: "The rising. The hovering. The dropping. All visible.",
+      screen2: "There's something you don't know. You've been closing the space before you feel it.",
+      screen3: "Seven days.",
+      primaryCta: "Begin",
+      secondaryCta: "Not today",
+      notification: "The decision pattern is visible. Something else keeps closing.",
+    },
   },
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 10. UNCERTAINTY
-  // Strong concept, needed most revision
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     id: "uncertainty",
     pattern: "The ground that isn't there",
     days: [
       {
-        entry: "What don't you know right now that you wish you did?",
-        response: "There's something you don't know. And it's been humming in the background all day.",
-        action: "Stop ignoring it. Just for a second. Feel the hum.",
-        close: "That's enough.",
+        anchor: "It's been there.",
+        entry: "What don't you know right now?",
+        response: "There's a gap.",
+        moment: "It opened. Then it closed.",
+        close: "The gap is there.",
+        notification: "The gap is there.",
       },
       {
-        entry: "Is the not-knowing louder or quieter today?",
-        response: "It shifts. But it hasn't left. You've just gotten better at layering noise over it.",
-        action: "Notice what you layered on top today. Busyness. Plans. Opinions. Just see the layers.",
-        close: "Leave them there.",
+        entry: "The gap opened again.",
+        response: "Same shape. It closed fast.",
+        moment: "It was open for a moment. Then it wasn't.",
+        close: "Nothing stayed open.",
+        notification: "Same gap.",
       },
       {
-        entry: "What do you do when you don't know?",
-        response: "You filled the gap with activity. Research, plans, opinions. The gap is still there.",
-        action: "Feel the urge to fix the not-knowing. Don't follow it. Just feel it pull.",
-        close: "That pull is the pattern.",
+        entry: "The gap opened again.",
+        response: "Same place. Same speed.",
+        moment: "It closed the same way as before.",
+        close: "Same closing.",
+        notification: "Same closing.",
       },
       {
-        entry: "When did certainty become the requirement?",
-        response: "At some point you decided that not knowing meant not safe. And you've been chasing solid ground in a world that doesn't offer it.",
-        action: "Notice what certainty you clung to today. Ask: is that solid, or am I gripping?",
-        close: "Gripping feels like holding. It isn't.",
+        entry: "The gap keeps closing.",
+        response: "Same speed every time.",
+        moment: "It opens and closes before you feel it.",
+        close: "The closing is automatic.",
+        notification: "The closing is automatic.",
       },
       {
-        entry: "What if you're not supposed to know yet?",
-        response: "That sentence made something in you resist. That resistance is more interesting than the answer.",
-        action: "Sit with the resistance. Not the uncertainty. The resistance to the uncertainty.",
-        close: "There's a difference.",
+        entry: "The gap opened again.",
+        response: "Same gap. But it stayed open a moment longer.",
+        moment: "The closing was slower this time.",
+        close: "It didn't close as fast.",
+        notification: "Same rhythm.",
       },
       {
-        entry: "What would you do today if certainty wasn't coming?",
-        response: "You'd have to move without knowing where the ground is. Notice what part of you just clenched.",
-        action: "Feel what it would be like to step forward without knowing the ground is there.",
-        close: "You've done it before. You just didn't call it that.",
+        entry: "What's in the gap when it's open?",
+        response: "Something that doesn't have a name yet.",
+        moment: "The gap was open. Just the gap.",
+        close: "Not empty. Not full. Something else.",
+        notification: "The gap was open.",
       },
       {
-        entry: "The ground isn't there. You're still standing.",
-        response: "Not because you found certainty. Because you stopped requiring it.",
-        action: "Let the not-knowing be here. Not as a problem. As the actual condition.",
-        close: "You can go.",
+        entry: "The gap is still there.",
+        response: "It opens. It closes. Both.",
+        moment: "The gap and the seeing of the gap. Both.",
+        close: "The gap stays.",
       },
     ],
+    // No transition — last sequence
   },
 ];
 
@@ -568,4 +713,9 @@ export function getDayContent(sequenceId: string, day: number): DayContent | nul
 
 export function getSequenceIds(): string[] {
   return SEQUENCES.map((s) => s.id);
+}
+
+export function getTransition(sequenceId: string): Transition | null {
+  const seq = getSequence(sequenceId);
+  return seq?.transition || null;
 }
