@@ -18,19 +18,19 @@
 /* ── Entry ── */
 
 .anchorLine {
-  font-size: 16px;
-  line-height: 1.5;
-  color: #777;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #999;
   font-weight: 300;
   text-align: center;
-  max-width: 280px;
+  max-width: 300px;
   margin-bottom: 32px;
 }
 
 .entryLine {
-  font-size: 21px;
-  line-height: 1.55;
-  color: #b0b0b0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #999;
   font-weight: 300;
   text-align: center;
   max-width: 300px;
@@ -39,13 +39,12 @@
 /* ── Response ── */
 
 .responseLine {
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1.6;
-  color: var(--fg);
+  color: #999;
   font-weight: 300;
   text-align: center;
   max-width: 300px;
-  font-style: italic;
   white-space: pre-line;
 }
 
@@ -54,21 +53,21 @@
 .momentLine {
   font-size: 18px;
   line-height: 1.6;
-  color: #aaa;
+  color: #999;
   font-weight: 300;
   text-align: center;
-  max-width: 280px;
+  max-width: 300px;
 }
 
 /* ── Close ── */
 
 .closeLine {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
-  color: var(--fg-dim);
+  color: #999;
   font-weight: 300;
   text-align: center;
-  max-width: 260px;
+  max-width: 300px;
 }
 
 /* ── Shared ── */
@@ -91,23 +90,22 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #555;
+  background: #999;
 }
 
 .doneLine {
-  font-size: 14px;
-  color: #555;
+  font-size: 18px;
+  color: #999;
   font-weight: 300;
-  letter-spacing: 0.03em;
   margin-top: 48px;
   text-align: center;
 }
 
 .wordmark {
-  font-size: 11px;
-  color: #333;
+  font-size: 13px;
+  color: #444;
   font-weight: 300;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.2em;
   margin-top: 64px;
   text-align: center;
 }
@@ -138,11 +136,10 @@
 }
 
 .alreadyDone {
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  color: #555;
-  margin-top: 48px;
+  font-size: 18px;
+  color: #999;
   font-weight: 300;
+  margin-top: 48px;
   text-align: center;
 }
 
@@ -156,8 +153,8 @@
 }
 
 .transitionLine {
-  font-size: 19px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.6;
   color: #999;
   font-weight: 300;
   text-align: center;
@@ -165,10 +162,10 @@
 }
 
 .transitionCommit {
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  color: #555;
-  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #999;
+  font-weight: 300;
   text-align: center;
 }
 
@@ -223,19 +220,18 @@
 }
 
 .firstEntryGrounding {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   color: #666;
   font-weight: 300;
   text-align: center;
   max-width: 300px;
-  letter-spacing: 0.02em;
 }
 
 .firstEntryLine {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.6;
-  color: #aaa;
+  color: #999;
   font-weight: 300;
   text-align: center;
   max-width: 300px;
@@ -246,10 +242,10 @@
 .reanchorLine {
   font-size: 18px;
   line-height: 1.6;
-  color: #888;
+  color: #999;
   font-weight: 300;
   text-align: center;
-  max-width: 280px;
+  max-width: 300px;
 }
 
 /* ── Seen Layer ── */
@@ -301,10 +297,10 @@
 }
 
 .sendLine {
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.6;
   color: #999;
   font-weight: 300;
   text-align: center;
-  max-width: 280px;
+  max-width: 300px;
 }
